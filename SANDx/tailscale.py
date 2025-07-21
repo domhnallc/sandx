@@ -45,7 +45,7 @@ def select_tailscale_machines(online_machines, user_selected_machines):
     """
     return [machine for machine in online_machines if machine in user_selected_machines]
 
-def scp_folder_to_tailscale_machine(machine, local_folder, remote_folder):
+def scp_folder_to_tailscale_machine(machine, local_folder, remote_folder, user="admin2"):
     """
     Copies a local folder to a remote folder on a Tailscale machine using SCP.
 
@@ -60,7 +60,7 @@ def scp_folder_to_tailscale_machine(machine, local_folder, remote_folder):
     Prints:
         Success or failure message indicating the result of the copy operation.
     """
-    cmd = f"scp -r {local_folder} {machine}:{remote_folder}"
+    cmd = f"scp -r {local_folder} {user}@{machine}:{remote_folder}"
     try:
         subprocess.check_call(cmd, shell=True)
         print(f"Successfully copied {local_folder} to {machine}:{remote_folder}")
