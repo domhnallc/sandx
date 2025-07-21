@@ -68,9 +68,15 @@ def scp_folder_to_tailscale_machine(machine, local_folder, remote_folder, user="
         print(f"Failed to copy folder to {machine}: {e}")
 
 
+
+
     
 def main():
     online_machines = get_online_tailscale_members()
+
+
+    # Example of adding test machines
+
     print(online_machines)
 
 main()
