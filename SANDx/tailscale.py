@@ -1,6 +1,17 @@
 import subprocess
 
 def get_online_tailscale_members():
+    """
+    Retrieves a list of online Tailscale members by executing the 'tailscale status' command
+    and filtering out offline entries.
+
+    Returns:
+        list: A list of member names (as strings) that are currently online.
+
+    Notes:
+        - Assumes the second column in the 'tailscale status' output is the member name.
+        - Returns an empty list if the command fails or no online members are found.
+    """
     base_cmd = "tailscale status"
     filter = "grep -v offline"
 
@@ -19,6 +30,20 @@ def get_online_tailscale_members():
     except subprocess.CalledProcessError as e:
         print("error" + e.output)
         return []
+    
+
+def select_tailscale_machines(online_machines, user_selected_machines):
+    """
+    Filters the list of online Tailscale machines based on user selection.
+
+    Args:
+        online_machines (list): List of online Tailscale machine names.
+        user_selected_machines (list): List of machine names selected by the user.
+
+    Returns:
+        list: A list of machines that are both online and selected by the user.
+    """
+    return [machine for machine in online_machines if machine in user_selected_machines]
 
 def scp_folder_to_tailscale_machine(machine, local_folder, remote_folder):
     """
@@ -41,6 +66,8 @@ def scp_folder_to_tailscale_machine(machine, local_folder, remote_folder):
         print(f"Successfully copied {local_folder} to {machine}:{remote_folder}")
     except subprocess.CalledProcessError as e:
         print(f"Failed to copy folder to {machine}: {e}")
+
+
     
 def main():
     online_machines = get_online_tailscale_members()
