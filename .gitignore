@@ -1,2 +1,2 @@
-./.venv/sandx/*
+.venv/*
 SANDx/__pycache__/tailscale.cpython-312.pyc
