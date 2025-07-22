@@ -5,6 +5,15 @@ This script provides a command-line interface for configuring the SANDx tool,
 allowing users to specify input folders, machines, CPU architectures, experiments,
 and output folders. It includes validation for paths and machine lists, ensuring
 that the provided configurations are correct before proceeding with the analysis.
+
+# Basic usage
+python app.py -i /data/input -m server1,server2 -c x86 -e dynamic_opcodes -o /data/output
+
+# Multiple experiments
+python app.py --input-folder /path --machines vm1,vm2,vm3 --cpu arm --experiments dynamic_opcodes,syscalls --output-folder /results
+
+# With custom folder count
+python app.py -n 5 -i /input -m machine1 -c mips -e static_opcodes,syscalls -o /output
 """
 
 import argparse
