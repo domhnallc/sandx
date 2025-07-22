@@ -12,12 +12,9 @@ import sys
 from pathlib import Path
 from unittest.mock import patch, mock_open
 from io import StringIO
-from options import (
-
-# Import the CLI parser module (assuming it's saved as cli_parser.py)
-# If the module name is different, adjust the import accordingly
+import process_options
 try:
-    from options import (
+    from process_options import (
         parse_machine_list,
         validate_existing_path, 
         validate_output_path,
@@ -25,9 +22,8 @@ try:
         main
     )
 except ImportError:
-    # If running as standalone, define the functions here
-    # (In practice, you'd import from your actual module)
-    print("Warning: Could not import cli_parser module. Ensure it's in the same directory.")
+
+    print("Warning: Could not import process_options module. Ensure it's in the same directory.")
     sys.exit(1)
 
 
