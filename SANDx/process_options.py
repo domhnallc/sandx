@@ -95,6 +95,7 @@ Examples:
     parser.add_argument(
         '-c', '--cpu',
         choices=['arm', 'sparc', 'x86', 'm68k', 'mips', 'mipsel', 'powerpc'],
+        type=str.lower, # Normalize to lowercase
         required=True,
         help='Target CPU architecture (mandatory)'
     )
