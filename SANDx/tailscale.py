@@ -79,4 +79,5 @@ def main():
 
     print(online_machines)
 
-main()
+if __name__ == "__main__":
+    args = main()
