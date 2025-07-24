@@ -74,6 +74,14 @@ class Experiment:
                 copy2(file, split_subfolder)    
         print(f"Created split folders: {split_folder_list}")
         return split_folder_list
+    
+    def run_on_machine(self):
+        
+        """        Runs the analysis on the specified machine with given parameters.
+        """
+        print(f"Running analysis on {machine} with CPU {cpu} for experiments {experiments}...")
+        # Placeholder for running logic
+        # Implement the actual running logic here
 
 def run_analysis(exp: Experiment):
     """Runs the analysis on specified machines with given parameters.
@@ -105,19 +113,7 @@ def send_split_folders_to_machines(num_folders, selected_machines, input_split_f
             print(f"Copying {local_folder} to {machine}:{remote_folder}")
             ts.scp_folder_to_tailscale_machine(machine, local_folder, remote_folder)
 
-def run_on_machine(machine, cpu, experiments, output_folder):
-    """
-    Runs the analysis on the specified machine with the given parameters.
-    
-    Args:
-        machine (str): The machine to run the analysis on.
-        cpu (str): The CPU architecture to target.
-        experiments (list): List of experiments to run.
-        output_folder (str): The folder to store results.
-    """
-    print(f"Running analysis on {machine} with CPU {cpu} for experiments {experiments}...")
-    # Placeholder for running logic
-    # Implement the actual running logic here
+
 
 def main():
     """Main entry point for the script"""
