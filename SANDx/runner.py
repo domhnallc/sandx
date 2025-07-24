@@ -28,6 +28,26 @@ class Experiment:
                 f"output_folder:{self.output_folder}, "
                 f"num_folders:{self.num_folders}, "
                 f"notify:{self.notify})")
+    
+    def map_folders_to_machines(self) -> dict[Path, str]:
+        """
+        Maps the input folders to the specified machines.
+        
+        Args:
+            input_split_folders (list[Path]): The list of input split folders.
+            machines (list): List of machine names or addresses.
+            num_folders (int): The number of folders to map.
+            cpu (str): The CPU architecture to target.
+            experiments (list): List of experiments to run.
+            output_folder (str): The folder to store results.
+        """
+        print(f"Mapping {self.num_folders} folders to machines: {self.selected_machines}")
+        folder_machine_map = {}
+        for idx, folder in enumerate(self.input_split_folders):
+            machine = self.selected_machines[idx % len(self.selected_machines)]
+            folder_machine_map[folder] = machine
+        print(f"Folder to machine mapping: {folder_machine_map}")
+        return folder_machine_map
 
 
 
@@ -41,25 +61,7 @@ def run_analysis(exp: Experiment):
     for machine in exp.selected_machines:
         run_on_machine(machine, exp.cpu, exp.experiments, exp.output_folder)
 
-def map_folders_to_machines(num_folders: int, input_split_folders: list[Path], selected_machines: list[str]) -> dict[Path, str]:
-    """
-    Maps the input folders to the specified machines.
-    
-    Args:
-        input_split_folders (list[Path]): The list of input split folders.
-        machines (list): List of machine names or addresses.
-        num_folders (int): The number of folders to map.
-        cpu (str): The CPU architecture to target.
-        experiments (list): List of experiments to run.
-        output_folder (str): The folder to store results.
-    """
-    print(f"Mapping {num_folders} folders to machines: {selected_machines}")
-    folder_machine_map = {}
-    for idx, folder in enumerate(input_split_folders):
-        machine = selected_machines[idx % len(selected_machines)]
-        folder_machine_map[folder] = machine
-    print(f"Folder to machine mapping: {folder_machine_map}")
-    return folder_machine_map
+
 
 def split_input_folder(input_folder: Path, num_folders: int) -> list[Path]:
     """
