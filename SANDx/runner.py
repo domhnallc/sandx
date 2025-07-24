@@ -1,11 +1,12 @@
 from pathlib import Path
 from shutil import copy2
 from dataclasses import dataclass
+import os
 
 import process_options as po
 import tailscale as ts
 
-import os
+import config as cfg
 
 # Define the experiment class to hold the parameters for running the analysis
 @dataclass
@@ -85,12 +86,13 @@ class Experiment:
             num_folders (int): The number of folders to send.
         """
         remote_path = cfg.remote_path
+
         for machine in self.selected_machines:
             for i in range(self.num_folders):
                 local_folder = f"{self.input_split_folders[i]}"
-                remote_folder = f"{remote_path}/split_folder_{i}"
-                print(f"Copying {local_folder} to {machine}:{remote_folder}")
-                ts.scp_folder_to_tailscale_machine(machine, local_folder, remote_folder)
+                
+                print(f"Copying {local_folder} to {machine}:{remote_path}")
+                ts.scp_folder_to_tailscale_machine(machine, local_folder, remote_path)
     
     def run_on_machine(self):
         
