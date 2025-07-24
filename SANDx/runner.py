@@ -11,7 +11,9 @@ import os
 @dataclass
 class Experiment:
     
-    def __init__(self, input_folder: Path, selected_machines: list[str], cpu: str, experiments: list[str], output_folder: str, num_folders: int = 1, notify: bool = False):
+    def __init__(self, input_folder: Path, selected_machines: list[str], 
+                 cpu: str, experiments: list[str], output_folder: str, 
+                 num_folders: int = 1, notify: bool = False):
         self.input_folder = input_folder
         self.selected_machines = selected_machines
         self.cpu = cpu
@@ -49,7 +51,29 @@ class Experiment:
         print(f"Folder to machine mapping: {folder_machine_map}")
         return folder_machine_map
 
-
+    def split_input_folder(self) -> list[Path]:
+        """
+        Splits the input folder into the specified number of folders.
+        
+        Args:
+            input_folder (str): The path to the input folder.
+            num_folders (int): The number of folders to split into.
+        """
+        print(f"Splitting {self.input_folder} into {self.num_folders} folders...")
+        split_folder_list = []
+        all_files = sorted([f for f in self.input_folder.iterdir() if f.is_file()])
+        files_per_folder = (len(all_files) + self.num_folders - 1) // self.num_folders  # ceil division
+        # loop to split files into folders
+        for i in range(self.num_folders):
+            split_subfolder = self.input_folder.parent / f"{self.input_folder.name}_{i+1:02d}"
+            split_subfolder.mkdir(exist_ok=True)
+            split_folder_list.append(split_subfolder)
+            start = i * files_per_folder
+            end = start + files_per_folder
+            for file in all_files[start:end]:   
+                copy2(file, split_subfolder)    
+        print(f"Created split folders: {split_folder_list}")
+        return split_folder_list
 
 def run_analysis(exp: Experiment):
     """Runs the analysis on specified machines with given parameters.
@@ -63,32 +87,7 @@ def run_analysis(exp: Experiment):
 
 
 
-def split_input_folder(input_folder: Path, num_folders: int) -> list[Path]:
-    """
-    Splits the input folder into the specified number of folders.
-    
-    Args:
-        input_folder (str): The path to the input folder.
-        num_folders (int): The number of folders to split into.
-    """
-    # Placeholder for splitting logic
-    print(f"Splitting {input_folder} into {num_folders} folders...")
-    split_folder_list = []
-    input_folder = Path(input_folder)
-    all_files = sorted([f for f in input_folder.iterdir() if f.is_file()])
-    files_per_folder = (len(all_files) + num_folders - 1) // num_folders  # ceil division
 
-    for i in range(num_folders):
-        split_subfolder = input_folder.parent / f"{input_folder.name}_{i+1:02d}"
-        split_subfolder.mkdir(exist_ok=True)
-        split_folder_list.append(split_subfolder)
-        start = i * files_per_folder
-        end = start + files_per_folder
-        for file in all_files[start:end]:   
-            copy2(file, split_subfolder)    
-    for i in range(num_folders):
-        split_folder_list.append(f"{input_folder}/split_folder_{i}")
-    return split_folder_list
 
 def send_split_folders_to_machines(num_folders, selected_machines, input_split_folders):
     """
