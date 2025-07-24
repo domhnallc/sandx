@@ -67,7 +67,27 @@ def scp_folder_to_tailscale_machine(machine, local_folder, remote_folder, user="
     except subprocess.CalledProcessError as e:
         print(f"Failed to copy folder to {machine}: {e}")
 
+def run_command_on_tailscale_machine(machine, command, user="admin2"):
+    """
+    Executes a command on a Tailscale machine via SSH.
 
+    Args:
+        machine (str): The Tailscale machine's address (hostname or IP).
+        command (str): The command to execute on the remote machine.
+        user (str): The username to use for SSH (default is "admin2").
+
+    Raises:
+        subprocess.CalledProcessError: If the SSH command fails.
+
+    Prints:
+        The output of the executed command or an error message if it fails.
+    """
+    cmd = f"ssh {user}@{machine} '{command}'"
+    try:
+        output = subprocess.check_output(cmd, shell=True, text=True)
+        print(f"Command output from {machine}:\n{output}")
+    except subprocess.CalledProcessError as e:
+        print(f"Failed to run command on {machine}: {e.output}")
 
 
     
