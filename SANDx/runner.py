@@ -75,6 +75,23 @@ class Experiment:
         print(f"Created split folders: {split_folder_list}")
         return split_folder_list
     
+    def send_split_folders_to_machines(self):
+        """
+        Sends the split folders to the specified machines.
+        
+        Args:
+            machines (list): List of machine names or addresses.
+            input_folder (str): The path to the input folder.
+            num_folders (int): The number of folders to send.
+        """
+        remote_path = cfg.remote_path
+        for machine in self.selected_machines:
+            for i in range(self.num_folders):
+                local_folder = f"{self.input_split_folders[i]}"
+                remote_folder = f"{remote_path}/split_folder_{i}"
+                print(f"Copying {local_folder} to {machine}:{remote_folder}")
+                ts.scp_folder_to_tailscale_machine(machine, local_folder, remote_folder)
+    
     def run_on_machine(self):
         
         """        Runs the analysis on the specified machine with given parameters.
@@ -97,21 +114,6 @@ def run_analysis(exp: Experiment):
 
 
 
-def send_split_folders_to_machines(num_folders, selected_machines, input_split_folders):
-    """
-    Sends the split folders to the specified machines.
-    
-    Args:
-        machines (list): List of machine names or addresses.
-        input_folder (str): The path to the input folder.
-        num_folders (int): The number of folders to send.
-    """
-    for machine in selected_machines:
-        for i in range(num_folders):
-            local_folder = f"{input_split_folders[i]}"
-            remote_folder = f"/remote/path/split_folder_{i}"
-            print(f"Copying {local_folder} to {machine}:{remote_folder}")
-            ts.scp_folder_to_tailscale_machine(machine, local_folder, remote_folder)
 
 
 
