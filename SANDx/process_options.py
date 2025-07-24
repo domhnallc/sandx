@@ -123,8 +123,7 @@ Examples:
         choices=['yes', 'no'],
         default='no',
         help='Enable or disable notifications (default: no)',
-        required=False,
-        help='Use ntfy to notify when the analysis is complete (default: no)'
+        required=False
     )
     
     return parser
