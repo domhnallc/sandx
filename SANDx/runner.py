@@ -97,6 +97,7 @@ class Experiment:
                 except Exception as e:
                     print(f"Error copying to {machine}:{remote_path} - {e}")
                 print(f"Copied {local_folder} to {machine}:{remote_path}")
+    
     def run_on_machine(self):
         
         """        Runs the analysis on the specified machine with given parameters.
