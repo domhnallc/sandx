@@ -13,9 +13,9 @@ def get_online_tailscale_members():
         - Returns an empty list if the command fails or no online members are found.
     """
     base_cmd = "tailscale status"
-    filter = "grep -v offline"
+    filter_online = "grep -v offline"
 
-    cmd = f"{base_cmd} | {filter}"
+    cmd = f"{base_cmd} | {filter_online}"
     try:
         output = subprocess.check_output(cmd, shell=True, text=True)
         members = []
