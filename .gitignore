@@ -3,3 +3,4 @@ SANDx/__pycache__/tailscale.cpython-312.pyc
 SANDx/__pycache__/process_options.cpython-310.pyc
 SANDx/test/__pycache__/tests.cpython-310.pyc
 sandxenv/*
+*.cpython*
