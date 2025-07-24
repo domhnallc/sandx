@@ -38,8 +38,8 @@ def run_analysis(exp: Experiment):
     map_folders_to_machines(exp.num_folders, input_split_folders, exp.selected_machines)
     send_split_folders_to_machines(exp.num_folders, exp.selected_machines, input_split_folders)
 
-    for machine in selected_machines:
-        run_on_machine(machine, cpu, experiments, output_folder)    
+    for machine in exp.selected_machines:
+        run_on_machine(machine, exp.cpu, exp.experiments, exp.output_folder)
 
 def map_folders_to_machines(num_folders: int, input_split_folders: list[Path], selected_machines: list[str]) -> dict[Path, str]:
     """
