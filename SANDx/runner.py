@@ -1,7 +1,9 @@
-import process_options as po
-import tailscale as ts
 from pathlib import Path
 from shutil import copy2
+
+import process_options as po
+import tailscale as ts
+
 import os
 
 def run_analysis(input_folder, selected_machines, cpu, experiments, output_folder, num_folders, notify='no'):
@@ -55,7 +57,7 @@ def split_input_folder(input_folder: Path, num_folders: int) -> list[Path]:
         split_folder_list.append(split_subfolder)
         start = i * files_per_folder
         end = start + files_per_folder
-        for file in all_files[start:end]:
+        for file in all_files[start:end]:   
             copy2(file, split_subfolder)    
     for i in range(num_folders):
         split_folder_list.append(f"{input_folder}/split_folder_{i}")
