@@ -73,13 +73,18 @@ class Experiment:
         return folder_machine_map
 
     def split_input_folder(self) -> list[Path]:
-        """
-        Splits the input folder into the specified number of folders.
         
-        Args:
-            input_folder (str): The path to the input folder.
-            num_folders (int): The number of folders to split into.
-        """
+        if self.num_folders <= 0:
+            raise ValueError("Number of parts must be greater than 0")
+        
+        source_path = Path(self.input_folder)
+        
+        if not source_path.exists():
+            raise ValueError(f"Source folder '{self.input_folder}' does not exist")
+        
+        if not source_path.is_dir():
+            raise ValueError(f"'{self.input_folder}' is not a directory")
+    
         print(f"Splitting {self.input_folder} into {self.num_folders} folders...")
         split_folder_list = []
         all_files = sorted([f for f in self.input_folder.iterdir() if f.is_file()])
