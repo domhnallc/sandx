@@ -7,6 +7,12 @@ import os
 import process_options as po
 import tailscale as ts
 import subprocess
+import os
+import shutil
+import math
+from pathlib import Path
+from typing import List, Optional
+
 
 @dataclass
 class Experiment:
@@ -72,34 +78,101 @@ class Experiment:
         print(f"Folder to machine mapping: {folder_machine_map}")
         return folder_machine_map
 
-    def split_input_folder(self) -> list[Path]:
+
+    def split_folder(self) -> List[str]:
+        """
+        Split a folder into n parts by distributing files across multiple subdirectories.
         
+        Args:
+            source_folder (str): Path to the source folder to split
+            n_parts (int): Number of parts to split the folder into
+            output_base (str, optional): Base path for output folders. If None, creates
+                                    subfolders in the same directory as source_folder
+        
+        Returns:
+            List[str]: List of paths to the created split folders
+        
+        Raises:
+            ValueError: If n_parts <= 0 or source_folder doesn't exist
+            OSError: If there are permission issues creating directories or copying files
+        """
         if self.num_folders <= 0:
             raise ValueError("Number of parts must be greater than 0")
         
         source_path = Path(self.input_folder)
-        
         if not source_path.exists():
             raise ValueError(f"Source folder '{self.input_folder}' does not exist")
         
         if not source_path.is_dir():
             raise ValueError(f"'{self.input_folder}' is not a directory")
-    
-        print(f"Splitting {self.input_folder} into {self.num_folders} folders...")
-        split_folder_list = []
-        all_files = sorted([f for f in self.input_folder.iterdir() if f.is_file()])
-        files_per_folder = (len(all_files) + self.num_folders - 1) // self.num_folders  # ceil division
-        # loop to split files into folders
+        
+        # Get all files in the source folder (recursively)
+        all_files = []
+        for root, dirs, files in os.walk(self.input_folder):
+            for file in files:
+                file_path = os.path.join(root, file)
+                # Store both absolute path and relative path from source
+                rel_path = os.path.relpath(file_path, self.input_folder)
+                all_files.append((file_path, rel_path))
+        
+        if not all_files:
+            raise ValueError("Source folder is empty")
+        
+        # Determine output base directory
+        if output_base is None:
+            output_base = source_path.parent
+        else:
+            output_base = Path(output_base)
+        
+        # Create split folder names
+        source_name = source_path.name
+        split_folders = []
         for i in range(self.num_folders):
-            split_subfolder = self.input_folder.parent / f"{self.input_folder.name}_{i+1:02d}"
-            split_subfolder.mkdir(exist_ok=True)
-            split_folder_list.append(split_subfolder)
-            start = i * files_per_folder
-            end = start + files_per_folder
-            for file in all_files[start:end]:   
-                copy2(file, split_subfolder)    
-        print(f"Created split folders: {split_folder_list}")
-        return split_folder_list
+            folder_name = f"{source_name}_part_{i+1}"
+            split_path = output_base / folder_name
+            split_folders.append(str(split_path))
+        
+        # Calculate files per part
+        files_per_part = math.ceil(len(all_files) / self.num_folders)
+        
+        # Create directories and distribute files
+        created_folders = []
+        
+        try:
+            for i, split_folder in enumerate(split_folders):
+                # Create split folder
+                os.makedirs(split_folder, exist_ok=True)
+                created_folders.append(split_folder)
+                
+                # file range for this part
+                start_idx = i * files_per_part
+                end_idx = min(start_idx + files_per_part, len(all_files))
+                
+                if start_idx >= len(all_files):
+                    # No more files to distribute
+                    continue
+                
+                # Copy files to this part
+                for j in range(start_idx, end_idx):
+                    src_file, rel_path = all_files[j]
+                    dst_file = os.path.join(split_folder, rel_path)
+                    
+                    # Create subdirectories if needed
+                    dst_dir = os.path.dirname(dst_file)
+                    if dst_dir:
+                        os.makedirs(dst_dir, exist_ok=True)
+                    
+                    # Copy the file
+                    shutil.copy2(src_file, dst_file)
+        
+        except Exception as e:
+            for folder in created_folders:
+                if os.path.exists(folder):
+                    shutil.rmtree(folder, ignore_errors=True)
+            raise OSError(f"Error creating split folders: {e}")
+        
+        return split_folders
+
     
     def send_split_folders_to_machines(self):
         """
