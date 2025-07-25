@@ -182,13 +182,13 @@ class Experiment:
                 print(f"Copied {local_folder} to {machine}:{remote_path}")
 
 
-    def run_on_machine(self, split_folder: Path):
+    def run_on_machine(self, machine: str, split_folder: Path):
         """
         Runs the analysis on the specified machine with given parameters.
         """
-        print(f"Running analysis on {machine} with CPU {cpu} for experiments {experiments}...")
+        print(f"Running analysis on {machine} with CPU {self.cpu} for experiments {self.experiments}...")
     
 
-        cmd = f"./vm_runner.sh {split_folder}"
+        cmd = f"./test.sh {split_folder}"
         
         ts.run_command_on_tailscale_machine(machine, cmd, user='admin2')
