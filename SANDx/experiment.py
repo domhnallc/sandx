@@ -97,25 +97,25 @@ class Experiment:
         if not source_path.is_dir():
             raise ValueError(f"'{self.input_folder}' is not a directory")
         
-        # Get all files in the source folder (recursively)
+         Get all files in the source folder (recursively)
         all_files = []
         for root, dirs, files in os.walk(self.input_folder):
             for file in files:
                 file_path = os.path.join(root, file)
-                # Store both absolute path and relative path from source
+                 Store both absolute path and relative path from source
                 rel_path = os.path.relpath(file_path, self.input_folder)
                 all_files.append((file_path, rel_path))
         
         if not all_files:
             raise ValueError("Source folder is empty")
         
-        # Determine output base directory
+         Determine output base directory
         if self.output_folder is None:
             output_base = source_path.parent
         else:
             output_base = Path(self.output_folder)
         
-        # Create split folder names
+         Create split folder names
         source_name = source_path.name
         split_folders = []
         for i in range(self.num_folders):
@@ -123,37 +123,37 @@ class Experiment:
             split_path = output_base / folder_name
             split_folders.append(str(split_path))
         
-        # Calculate files per part
+         Calculate files per part
         files_per_part = math.ceil(len(all_files) / self.num_folders)
         
-        # Create directories and distribute files
+         Create directories and distribute files
         created_folders = []
         
         try:
             for i, split_folder in enumerate(split_folders):
-                # Create split folder
+                 Create split folder
                 os.makedirs(split_folder, exist_ok=True)
                 created_folders.append(split_folder)
                 
-                # file range for this part
+                 file range for this part
                 start_idx = i * files_per_part
                 end_idx = min(start_idx + files_per_part, len(all_files))
                 
                 if start_idx >= len(all_files):
-                    # No more files to distribute
+                     No more files to distribute
                     continue
                 
-                # Copy files to this part
+                 Copy files to this part
                 for j in range(start_idx, end_idx):
                     src_file, rel_path = all_files[j]
                     dst_file = os.path.join(split_folder, rel_path)
                     
-                    # Create subdirectories if needed
+                     Create subdirectories if needed
                     dst_dir = os.path.dirname(dst_file)
                     if dst_dir:
                         os.makedirs(dst_dir, exist_ok=True)
                     
-                    # Copy the file
+                     Copy the file
                     shutil.copy2(src_file, dst_file)
         
         except Exception as e:
@@ -182,13 +182,13 @@ class Experiment:
                 print(f"Copied {local_folder} to {machine}:{remote_path}")
 
 
-    #def run_on_machine(self, split_folder: Path):
-    #    """
-    #    Runs the analysis on the specified machine with given parameters.
-    #    """
-    #    print(f"Running analysis on {machine} with CPU {cpu} for experiments {experiments}...")
-    #
-#
- #       cmd = f"./vm_runner.sh {split_folder}"
-  #      
-   #     ts.run_command_on_tailscale_machine(machine, cmd, user='admin2')
+    def run_on_machine(self, machine: str, split_folder: Path):
+        """
+        Runs the analysis on the specified machine with given parameters.
+        """
+        print(f"Running analysis on {machine} with CPU {self.cpu} for experiments {self.experiments}")
+    
+
+        #cmd = f"./vm_runner.sh {split_folder}"
+        
+        #ts.run_command_on_tailscale_machine(machine, cmd, user='admin2')
