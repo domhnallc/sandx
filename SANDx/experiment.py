@@ -119,10 +119,10 @@ class Experiment:
             raise ValueError("Source folder is empty")
         
         # Determine output base directory
-        if output_base is None:
+        if self.output_folder is None:
             output_base = source_path.parent
         else:
-            output_base = Path(output_base)
+            output_base = Path(self.output_folder)
         
         # Create split folder names
         source_name = source_path.name

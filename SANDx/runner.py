@@ -11,12 +11,11 @@ from experiment import Experiment
 def run_analysis(exp: Experiment):
     """Runs the analysis on specified machines with given parameters.
     """
-    input_split_folders = exp.split_input_folder(exp.input_folder, exp.num_folders)
-    map_folders_to_machines(exp.num_folders, input_split_folders, exp.selected_machines)
-    send_split_folders_to_machines(exp.num_folders, exp.selected_machines, input_split_folders)
+    exp.split_folder()
+    exp.map_folders_to_machines()
+    exp.send_split_folders_to_machines()
+    exp.run_on_machine()
 
-    for machine in exp.selected_machines:
-        run_on_machine(machine, exp.cpu, exp.experiments, exp.output_folder)
 
 
 
@@ -38,9 +37,8 @@ def main():
         num_folders=args.num_folders,
         notify=args.notify
     )
-    run_analysis(exp))
+    run_analysis(exp)
     
-    return args  # Return args for further processing if needed
 
 
 if __name__ == "__main__":
