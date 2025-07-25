@@ -1,0 +1,26 @@
+import experiment
+import pytest
+
+exp = experiment.Experiment(
+    input_folder="/test/test_folder",
+    selected_machines=["b1m1", "b2m2"],
+    cpu="arm",
+    experiments="dynamic_opcode",
+    output_folder="/test/output",
+    num_folders=2,
+    notify=True
+) 
+
+def test_split_input_folder(exp):
+    
+    exp.split_input_folder()
+
+def main():
+    test_split_input_folder(exp)
+
+if __name__ == "__main__":
+    main()
+
+
+
+    
