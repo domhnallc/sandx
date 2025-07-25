@@ -59,7 +59,8 @@ class Experiment:
                 f"notify:{self.notify})")
     
     def map_folders_to_machines(self, split_folder_list: list) -> dict[Path, str]:
-      
+        if len(split_folder_list) != len(self.selected_machines):
+            raise ValueError("Number of split folders must match number of selected machines.")
         print(f"Mapping {self.num_folders} folders to machines: {self.selected_machines}")
         folder_machine_map = {}
         for idx, folder in enumerate(split_folder_list):
@@ -164,7 +165,7 @@ class Experiment:
         return split_folders
 
     
-    def send_split_folders_to_machines(machine_split_map: dict[Path, str]):
+    def send_split_folders_to_machines(self, machine_split_map: dict[Path, str]):
         """        Sends split folders to the specified machines using SCP.
         Args:
             machine_split_map (dict[Path, str]): Mapping of split folders to machines.
@@ -172,8 +173,7 @@ class Experiment:
 
         remote_path = cfg.remote_path
 
-        for machine in machine_split_map.values():
-            local_folder = f"{machine.key}"
+        for local_folder, machine in machine_split_map.items():
             print(f"Copying {local_folder} to {machine}:{remote_path}")
             try:
                 ts.scp_folder_to_tailscale_machine(machine, local_folder, remote_path)
