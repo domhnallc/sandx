@@ -59,17 +59,7 @@ class Experiment:
                 f"notify:{self.notify})")
     
     def map_folders_to_machines(self, split_folder_list: list) -> dict[Path, str]:
-        """
-        Maps the input folders to the specified machines.
-        
-        Args:
-            input_split_folders (list[Path]): The list of input split folders.
-            machines (list): List of machine names or addresses.
-            num_folders (int): The number of folders to map.
-            cpu (str): The CPU architecture to target.
-            experiments (list): List of experiments to run.
-            output_folder (str): The folder to store results.
-        """
+      
         print(f"Mapping {self.num_folders} folders to machines: {self.selected_machines}")
         folder_machine_map = {}
         for idx, folder in enumerate(split_folder_list):
@@ -174,26 +164,21 @@ class Experiment:
         return split_folders
 
     
-    def send_split_folders_to_machines(self):
-        """
-        Sends the split folders to the specified machines.
-        
+    def send_split_folders_to_machines(machine_split_map: dict[Path, str]):
+        """        Sends split folders to the specified machines using SCP.
         Args:
-            machines (list): List of machine names or addresses.
-            input_folder (str): The path to the input folder.
-            num_folders (int): The number of folders to send.
+            machine_split_map (dict[Path, str]): Mapping of split folders to machines.
         """
+
         remote_path = cfg.remote_path
 
-        for machine in self.selected_machines:
-            for i in range(self.num_folders):
-                local_folder = f"{self.input_split_folders[i]}"
-                
-                print(f"Copying {local_folder} to {machine}:{remote_path}")
-                try:
-                    ts.scp_folder_to_tailscale_machine(machine, local_folder, remote_path)
-                except Exception as e:
-                    print(f"Error copying to {machine}:{remote_path} - {e}")
+        for machine in machine_split_map.values():
+            local_folder = f"{machine.key}"
+            print(f"Copying {local_folder} to {machine}:{remote_path}")
+            try:
+                ts.scp_folder_to_tailscale_machine(machine, local_folder, remote_path)
+            except Exception as e:
+                print(f"Error copying to {machine}:{remote_path} - {e}")
                 print(f"Copied {local_folder} to {machine}:{remote_path}")
 
 

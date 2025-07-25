@@ -11,10 +11,11 @@ from experiment import Experiment
 def run_analysis(exp: Experiment):
     """Runs the analysis on specified machines with given parameters.
     """
-    exp.split_folder()
-    exp.map_folders_to_machines()
-    exp.send_split_folders_to_machines()
-    exp.run_on_machine()
+    split_folder_list = exp.split_folder()
+    mapped = exp.map_folders_to_machines(split_folder_list)
+    #print(mapped)
+    exp.send_split_folders_to_machines(mapped)
+    #exp.run_on_machine()
 
 
 
