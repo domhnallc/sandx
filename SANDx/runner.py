@@ -38,7 +38,7 @@ def main():
         notify=args.notify
     )
     run_analysis(exp)
-    if exp.notify:
+    if exp.notify is True:
         notify.send_notification(
             url="""https://ntfy.sh/""",
             topic="csit_30_1u",

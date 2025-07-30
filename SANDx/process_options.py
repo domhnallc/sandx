@@ -120,8 +120,7 @@ Examples:
     # Output folder (mandatory)
     parser.add_argument(
         '-N', '--notify',
-        choices=['yes', 'no'],
-        default='no',
+        action='store_true',
         help='Enable or disable notifications (default: no)',
         required=False
     )
