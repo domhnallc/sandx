@@ -7,6 +7,7 @@ import process_options as po
 import tailscale as ts
 
 from experiment import Experiment
+import notify
 
 def run_analysis(exp: Experiment):
     """Runs the analysis on specified machines with given parameters.
@@ -17,8 +18,6 @@ def run_analysis(exp: Experiment):
     exp.send_split_folders_to_machines(mapped)
     for machine, split_folder in mapped.items():
         exp.run_on_machine(machine, split_folder)
-
-
 
 
 
@@ -40,6 +39,12 @@ def main():
         notify=args.notify
     )
     run_analysis(exp)
+    if exp.notify:
+        notify.send_notification(
+            url="""https://ntfy.sh/""",
+            topic="csit_30_1u",
+            message=f"Experiment \n{str(exp)} completed successfully."
+        )
     
 
 
