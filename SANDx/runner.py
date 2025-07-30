@@ -26,7 +26,6 @@ def run_analysis(exp: Experiment):
 
 
 def main():
-    """Main entry point for the script"""
     args = po.get_options()
     po.display_config(args)
     exp = Experiment(   
