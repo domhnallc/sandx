@@ -12,6 +12,7 @@ import shutil
 import math
 from pathlib import Path
 from typing import List, Optional
+import notify
 
 
 @dataclass
@@ -192,3 +193,4 @@ class Experiment:
         cmd = f"./test.sh {split_folder}"
         
         ts.run_command_on_tailscale_machine(machine, cmd, user='admin2')
+
