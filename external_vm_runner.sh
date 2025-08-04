@@ -168,8 +168,8 @@ test_run_vm(){
 
 run_vm(){
 	local VM_NAME='charIoT'
-	local USER='username'
-	local PW='password'
+	local USER='admin2'
+	local PW='admin23'
 	local TO_EXEC=$1
 	local SLEEP=20
 	local SNAPSHOT='all_modes'
@@ -183,7 +183,7 @@ run_vm(){
 	#run file
 	echo "Processing  "$TO_EXEC
 	#vboxmanage guestcontrol $VM_NAME --username $USER --password $PW start --exe=/home/admin2/runner_ppc.sh -- "$TO_EXEC"
-	vboxmanage guestcontrol $VM_NAME --username $USER --password $PW run --timeout 60000 ~/runner_sparc32msb.sh $TO_EXEC
+	vboxmanage guestcontrol $VM_NAME --username admin2 --password admin23 run --timeout 60000 ~/runner_sparc32msb.sh $TO_EXEC
 
 	sleep $SLEEP
 	
