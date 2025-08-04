@@ -59,7 +59,7 @@ validate_experiment() {
     exit 1
 }
 
-# Initialize variables
+# Initialise variables
 INPUT_FOLDER=""
 CPU=""
 EXPERIMENT=""
@@ -69,6 +69,7 @@ OUTPUT_FOLDER=""
 while [[ $# -gt 0 ]]; do
     case $1 in
         -i|--input-folder)
+            # if $2 is empty or starts with a dash (is another option), it's an error
             if [[ -z "$2" || "$2" =~ ^-.*$ ]]; then
                 echo "Error: --input-folder requires a path"
                 usage
@@ -167,8 +168,8 @@ test_run_vm(){
 
 run_vm(){
 	local VM_NAME='charIoT'
-	local USER='admin2'
-	local PW='admin23'
+	local USER='username'
+	local PW='password'
 	local TO_EXEC=$1
 	local SLEEP=20
 	local SNAPSHOT='all_modes'
@@ -182,7 +183,7 @@ run_vm(){
 	#run file
 	echo "Processing  "$TO_EXEC
 	#vboxmanage guestcontrol $VM_NAME --username $USER --password $PW start --exe=/home/admin2/runner_ppc.sh -- "$TO_EXEC"
-	vboxmanage guestcontrol $VM_NAME --username admin2 --password admin23 run --timeout 60000 ~/runner_sparc32msb.sh $TO_EXEC
+	vboxmanage guestcontrol $VM_NAME --username $USER --password $PW run --timeout 60000 ~/runner_sparc32msb.sh $TO_EXEC
 
 	sleep $SLEEP
 	
