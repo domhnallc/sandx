@@ -124,7 +124,7 @@ run() {
         # Check if it's a regular file (not a directory)
         if [[ -f "$file" ]]; then
             ((file_count++))
-            test_run_vm "$file"
+            test_run_vm "$cpu" "$file"
         fi
     done
     
@@ -144,7 +144,15 @@ test_run_vm(){
 	local TO_EXEC=$1
 	local SLEEP=20
 	local SNAPSHOT='all_modes'
-	
+
+    if [[ $EXPERIMENT == "dynamic_opcodes" ]]; then
+        command_to_run="internal_runner_dynamic_opcode.sh"
+    elif [[ $EXPERIMENT == "static_opcodes" ]]; then
+        command_to_run="internal_runner_static_opcode.sh"
+    elif [[ $EXPERIMENT == "syscalls" ]]; then
+        command_to_run="internal_runner_syscalls.sh"
+    fi
+
 	#begin session
 	echo "vboxmanage snapshot $VM_NAME restore $SNAPSHOT"
 	echo "vboxmanage startvm $VM_NAME --type gui"
@@ -154,7 +162,8 @@ test_run_vm(){
 	#run file
 	echo "echo "Processing  "$TO_EXEC"
 	#vboxmanage guestcontrol $VM_NAME --username $USER --password $PW start --exe=/home/admin2/runner_ppc.sh -- "$TO_EXEC"
-	echo "vboxmanage guestcontrol $VM_NAME --username $USER --password $PW run --timeout 60000 ~/runner_sparc32msb.sh $TO_EXEC"
+	echo "vboxmanage guestcontrol $VM_NAME --username admin2 --password admin23 run --timeout 60000 $command_to_run $cpu $TO_EXEC"
+
 
 	echo "sleep $SLEEP"
 	
@@ -167,12 +176,17 @@ test_run_vm(){
 }
 
 run_vm(){
+    local cpu="$1"
+    local input_file="$2"
+
 	local VM_NAME='charIoT'
 	local USER='admin2'
 	local PW='admin23'
 	local TO_EXEC=$1
 	local SLEEP=20
 	local SNAPSHOT='all_modes'
+
+    local command_to_run
 	
 	#begin session
 	vboxmanage snapshot $VM_NAME restore $SNAPSHOT
@@ -183,7 +197,7 @@ run_vm(){
 	#run file
 	echo "Processing  "$TO_EXEC
 	#vboxmanage guestcontrol $VM_NAME --username $USER --password $PW start --exe=/home/admin2/runner_ppc.sh -- "$TO_EXEC"
-	vboxmanage guestcontrol $VM_NAME --username admin2 --password admin23 run --timeout 60000 ~/runner_sparc32msb.sh $TO_EXEC
+	vboxmanage guestcontrol $VM_NAME --username admin2 --password admin23 run --timeout 60000 $command_to_run $cpu $TO_EXEC
 
 	sleep $SLEEP
 	
