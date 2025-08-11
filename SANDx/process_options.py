@@ -56,14 +56,14 @@ def validate_output_path(path):
 
 
 def create_parser():
-    """Create and configure the argument parser"""
+    """Creates and configures the argument parser"""
     parser = argparse.ArgumentParser(
-        description="Analysis tool for binary files across different architectures",
+        description="SANDx Analysis tool for distributing experiments on binary files across architectures",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  %(prog)s -i /path/to/input -m machine1,machine2 -c x86 -e dynamic_opcodes -o /path/to/output
-  %(prog)s --input-folder /data --machines vm1,vm2,vm3 --cpu arm --experiments dynamic_opcodes,syscalls --output-folder /results --num-folders 5
+  runner.py -i /path/to/input -m machine1,machine2 -c x86 -e dynamic_opcodes -o /path/to/output -N yes
+  runner.py --input-folder /data --machines vm1,vm2,vm3 --cpu arm --experiments dynamic_opcodes,syscalls --output-folder /results --num-folders 5
         """
     )
     
@@ -116,11 +116,29 @@ Examples:
         required=True,
         help='Output folder path to store results (mandatory)'
     )
+
+    # Output folder (mandatory)
+    parser.add_argument(
+        '-N', '--notify',
+        action='store_true',
+        help='Enable or disable notifications (default: no)',
+        required=False
+    )
     
     return parser
 
+def display_config(args):
+    """Display the parsed configuration"""
+    print("Configuration:")
+    print(f"Input Folder: {args.input_folder}")
+    print(f"Machines: {', '.join(args.machines)}")
+    print(f"CPU Architecture: {args.cpu}")
+    print(f"Experiments: {', '.join(args.experiments)}")
+    print(f"Output Folder: {args.output_folder}")
+    print(f"Number of Folders: {args.num_folders}")
+    print(f"Notifications: {args.notify}")
 
-def main():
+def get_options():
     """Main function to parse arguments and validate configuration"""
     parser = create_parser()
     
@@ -130,19 +148,5 @@ def main():
         print(f"Error: {e}", file=sys.stderr)
         sys.exit(1)
     
-    # Display parsed configuration
-    print("Configuration:")
-    print(f"  Number of folders: {args.num_folders}")
-    print(f"  Input folder: {args.input_folder}")
-    print(f"  Machines: {', '.join(args.machines)}")
-    print(f"  CPU target: {args.cpu}")
-    print(f"  Experiments: {', '.join(args.experiments)}")
-    print(f"  Output folder: {args.output_folder}")
-    
-    # Your application logic would go here
-    # For now, just return the parsed arguments
     return args
 
-
-if __name__ == "__main__":
-    args = main()
