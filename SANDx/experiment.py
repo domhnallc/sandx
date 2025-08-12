@@ -190,7 +190,7 @@ class Experiment:
         print(f"Running analysis on {machine} with CPU {self.cpu} for experiments {self.experiments}...")
     
 
-        cmd = f"./home/admin2/shared/external_vm_runner.sh -i {split_folder} -c {self.cpu} -e {self.experiments} -o {self.output_folder}"
+        cmd = f"/home/admin2/shared/external_vm_runner.sh -i {split_folder} -c {self.cpu} -e {self.experiments} -o {self.output_folder}"
         print(f"\nCMD: {cmd}\n")
         ts.run_command_on_tailscale_machine(machine, cmd, user='admin2')
 
