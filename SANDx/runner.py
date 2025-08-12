@@ -16,7 +16,7 @@ def run_analysis(exp: Experiment):
     mapped = exp.map_folders_to_machines(split_folder_list)
     print(mapped.keys)
     exp.send_split_folders_to_machines(mapped)
-    for machine, split_folder in mapped.items():
+    for split_folder,machine in mapped.items():
         exp.run_on_machine(machine, split_folder)
 
 
