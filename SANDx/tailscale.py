@@ -87,7 +87,7 @@ def run_command_on_tailscale_machine(machine, command, user="admin2"):
         output = subprocess.check_output(cmd, shell=True, text=True)
         print(f"Command output from {machine}:\n{output}")
     except subprocess.CalledProcessError as e:
-        print(f"Failed to run command on {machine}: {e.output}")
+        print(f"Failed to run command {cmd}on {machine}: {e.output}")
 
 
     
