@@ -39,8 +39,9 @@ def main():
     )
     run_analysis(exp)
     if exp.notify is True:
+        print("run analyiss func")
         notify.send_notification(
-            print("run analyiss func")
+            
             url="""https://ntfy.sh/""",
             topic="csit_30_1u",
             message=f"Experiment \n{str(exp)} completed successfully."
