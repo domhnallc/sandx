@@ -175,6 +175,11 @@ class Experiment:
         remote_path = cfg.remote_path
         for local_folder, machine in machine_split_map.items():
             print(f"Copying {local_folder} to {machine}:{remote_path}")
+            # Get the split folder name only (not full local path)
+            split_folder_name = Path(local_folder).name
+            full_remote_path = f"{remote_path}/{split_folder_name}"
+            print(f"Full remote path: {full_remote_path}")
+            
             try:
                 ts.scp_folder_to_tailscale_machine(machine, local_folder, remote_path)
                 self.full_split_remote_path = f"{remote_path}/{local_folder}"
