@@ -173,7 +173,6 @@ class Experiment:
         """
 
         remote_path = cfg.remote_path
-
         for local_folder, machine in machine_split_map.items():
             print(f"Copying {local_folder} to {machine}:{remote_path}")
             try:
@@ -190,7 +189,7 @@ class Experiment:
         print(f"Running analysis on {machine} with CPU {self.cpu} for experiments {self.experiments}...")
     
 
-        cmd = f"/home/admin2/shared/external_vm_runner.sh -i {split_folder} -c {self.cpu} -e {self.experiments[0]} -o {self.output_folder}"
+        cmd = f"/home/admin2/shared/external_vm_runner.sh -i {cfg.remote_path}/{split_folder} -c {self.cpu} -e {self.experiments[0]} -o {self.output_folder}"
         print(f"\nCMD: {cmd}\n")
         ts.run_command_on_tailscale_machine(machine, cmd, user='admin2')
 
