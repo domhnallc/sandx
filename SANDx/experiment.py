@@ -177,6 +177,8 @@ class Experiment:
             print(f"Copying {local_folder} to {machine}:{remote_path}")
             try:
                 ts.scp_folder_to_tailscale_machine(machine, local_folder, remote_path)
+                self.full_split_remote_path = f"{remote_path}/{local_folder.name}"
+                print(f"full path: {self.full_split_remote_path}")
             except Exception as e:
                 print(f"Error copying to {machine}:{remote_path} - {e}")
                 print(f"Copied {local_folder} to {machine}:{remote_path}")
