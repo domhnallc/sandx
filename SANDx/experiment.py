@@ -100,9 +100,9 @@ class Experiment:
         
         # Get all files in the source folder (recursively)
         all_files = []
-        for root, dirs, files in os.walk(self.input_folder):
+        for _, _, files in os.walk(self.input_folder):
             for file in files:
-                file_path = os.path.join(root, file)
+                file_path = os.path.join(cfg.remote_path, file)
                 # Store both absolute path and relative path from source
                 rel_path = os.path.relpath(file_path, self.input_folder)
                 all_files.append((file_path, rel_path))
