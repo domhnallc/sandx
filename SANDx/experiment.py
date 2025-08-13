@@ -177,13 +177,11 @@ class Experiment:
             print(f"Copying {local_folder} to {machine}:{remote_path}")
             # Get the split folder name only (not full local path)
             split_folder_name = Path(local_folder).name
-            full_remote_path = f"{remote_path}/{split_folder_name}"
-            print(f"Full remote path: {full_remote_path}")
+            self.full_remote_path = f"{remote_path}{split_folder_name}"
+            print(f"Full remote path: {self.full_remote_path}")
             
             try:
                 ts.scp_folder_to_tailscale_machine(machine, local_folder, remote_path)
-                self.full_split_remote_path = f"{remote_path}/{local_folder}"
-                print(f"full path: {self.full_split_remote_path}")
             except Exception as e:
                 print(f"Error copying to {machine}:{remote_path} - {e}")
                 print(f"Copied {local_folder} to {machine}:{remote_path}")
@@ -193,7 +191,7 @@ class Experiment:
         """
         Runs the analysis on the specified machine with given parameters.
         """
-        print(f"Running analysis on {machine} with CPU {self.cpu} for experiments {self.experiments}...")
+        print(f"Running analysis on {machine} with CPU {self.cpu} for experiments {self.experiments} using {self.full_remote_path}")
     
 
         cmd = f"/home/admin2/shared/external_vm_runner.sh -i {cfg.remote_path}/{split_folder} -c {self.cpu} -e {self.experiments[0]} -o {self.output_folder}"
