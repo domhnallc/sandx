@@ -65,60 +65,70 @@ CPU=""
 EXPERIMENT=""
 OUTPUT_FOLDER=""
 TEST_MODE=false
+echo "CL args"
 # Process command line arguments
-while [[ $# -gt 0 ]]; do
-    case $1 in
-        -i|--input-folder)
-            # if $2 is empty or starts with a dash (is another option), it's an error
-            if [[ -z "$2" || "$2" =~ ^-.*$ ]]; then
-                echo "Error: --input-folder requires a path"
+process_args() {
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            -i|--input-folder)
+                echo "i"
+                if [[ -z "$2" || "$2" =~ ^-.*$ ]]; then
+                    echo "Error: --input-folder requires a path"
+                    usage
+                    exit 1
+                fi
+                INPUT_FOLDER="$2"
+                shift 2
+                ;;
+            -c|--cpu)
+                if [[ -z "$2" || "$2" =~ ^-.*$ ]]; then
+                    echo "Error: --cpu requires a value"
+                    usage
+                    exit 1
+                    return 1
+                fi
+                CPU=$(validate_cpu "$2")
+                shift 2
+                ;;
+            -e|--experiments)
+                if [[ -z "$2" || "$2" =~ ^-.*$ ]]; then
+                    echo "Error: --experiments requires a value"
+                    usage
+                    exit 1
+                fi
+                validate_experiment "$2"
+                EXPERIMENT="$2"
+                shift 2
+                ;;
+            -o|--output-folder)
+                if [[ -z "$2" || "$2" =~ ^-.*$ ]]; then
+                    echo "Error: --output-folder requires a path"
+                    usage
+                    exit 1
+                fi
+                OUTPUT_FOLDER="$2"
+                shift 2
+                ;;
+            -t|--test-mode)
+                TEST_MODE=true
+                shift 1
+                ;;
+            -h|--help)
                 usage
-            fi
-            INPUT_FOLDER="$2"
-            shift 2
-            ;;
-        -c|--cpu)
-            if [[ -z "$2" || "$2" =~ ^-.*$ ]]; then
-                echo "Error: --cpu requires a value"
+                exit 0
+                ;;
+            *)
+                echo "Unknown option: $1"
                 usage
-            fi
-            CPU=$(validate_cpu "$2")
-            shift 2
-            ;;
-        -e|--experiments)
-            if [[ -z "$2" || "$2" =~ ^-.*$ ]]; then
-                echo "Error: --experiments requires a value"
-                usage
-            fi
-            validate_experiment "$2"
-            EXPERIMENT="$2"
-            shift 2
-            ;;
-        -o|--output-folder)
-            if [[ -z "$2" || "$2" =~ ^-.*$ ]]; then
-                echo "Error: --output-folder requires a path"
-                usage
-            fi
-            OUTPUT_FOLDER="$2"
-            shift 2
-            ;;
-        -t|--test-mode)
-            TEST_MODE=true
-            shift 2
-            ;;
-        -h|--help)
-            usage
-            ;;
-        *)
-            echo "Unknown option: $1"
-            usage
-            ;;
-    esac
-done
+                exit 1
+                ;;
+        esac
+    done
+}
 
 run() {
     local input_dir="$1"
-    
+    echo "run"
     echo "Scanning input folder: $input_dir"
     
     # Find all files in the input directory (not subdirectories)
@@ -231,11 +241,11 @@ print_ascii(){
 }
 
 
-
+echo "start"
 ##############################
 #         START              #
 ##############################
-
+echo "param check"
 # Validate required parameters
 if [[ -z "$INPUT_FOLDER" || -z "$CPU" || -z "$EXPERIMENT" || -z "$OUTPUT_FOLDER" ]]; then
     echo "Error: Missing required parameters"
@@ -250,6 +260,7 @@ if [[ -z "$INPUT_FOLDER" || -z "$CPU" || -z "$EXPERIMENT" || -z "$OUTPUT_FOLDER"
     usage
 fi
 
+echo "validate folder"
 # Validate input folder exists
 validate_existing_path "$INPUT_FOLDER"
 
@@ -271,7 +282,7 @@ echo "================================================"
 echo
 
 
-# Processing
+    # Processing
 echo "Starting."
 echo "Running experiment"
 
