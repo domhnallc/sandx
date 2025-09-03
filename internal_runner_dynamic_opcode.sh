@@ -35,20 +35,28 @@ mipsel_command="$qemu_path/qemu-mipsel"
 build_experiment() {
 
     case "$cpu" in
+        "sparc")
+            subfolder="sparc/$experiment"
+            ;;
+        "x86_64")
+            subfolder="x86_64/$experiment"
+            ;;
+        "386")
+            subfolder="386/$experiment"
+            ;;
+        "arm")
+            subfolder="arm/$experiment"
+            ;;
         "m68k")
-            command_to_run="$m68k_command"
             subfolder="m68k/$experiment"
             ;;
         "powerpc")
-            command_to_run="$powerpc_command"
             subfolder="powerpc/$experiment"
             ;;
         "mips")
-            command_to_run="$mips_command"
             subfolder="mips/$experiment"
             ;;
         "mipsel")
-            command_to_run="$mipsel_command"
             subfolder="mipsel/$experiment"
             ;;
 

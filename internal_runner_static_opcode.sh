@@ -28,6 +28,18 @@ command_to_run=""
 build_experiment() {
 
     case "$cpu" in
+        "sparc")
+            subfolder="sparc/$experiment"
+            ;;
+        "x86_64")
+            subfolder="x86_64/$experiment"
+            ;;
+        "386")
+            subfolder="386/$experiment"
+            ;;
+        "arm")
+            subfolder="arm/$experiment"
+            ;;
         "m68k")
             subfolder="m68k/$experiment"
             ;;
@@ -59,3 +71,5 @@ base_static_opcode_command="timeout 10 objdump -D -j .text $input_file > $shared
 eval $base_static_opcode_command
 
 exit 0
+
+#vboxmanage guestcontrol alpine --username USERNAME --password PASSWORD run -- /bin/sh -- /home/admin2/statoptest.sh /bin/ls -- > testbinls.statop

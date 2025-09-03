@@ -18,6 +18,18 @@ subfolder=""
 build_experiment() {
 
     case "$cpu" in
+        "sparc")
+            subfolder="sparc/$experiment"
+            ;;
+        "x86_64")
+            subfolder="x86_64/$experiment"
+            ;;
+        "386")
+            subfolder="386/$experiment"
+            ;;
+        "arm")
+            subfolder="arm/$experiment"
+            ;;
         "m68k")
             subfolder="m68k/$experiment"
             ;;
