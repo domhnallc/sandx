@@ -64,7 +64,7 @@ INPUT_FOLDER=""
 CPU=""
 EXPERIMENT=""
 OUTPUT_FOLDER=""
-
+TEST_MODE=false
 # Process command line arguments
 while [[ $# -gt 0 ]]; do
     case $1 in
@@ -102,6 +102,10 @@ while [[ $# -gt 0 ]]; do
             OUTPUT_FOLDER="$2"
             shift 2
             ;;
+        -t|--test-mode)
+            TEST_MODE=true
+            shift 2
+            ;;
         -h|--help)
             usage
             ;;
@@ -124,7 +128,14 @@ run() {
         # Check if it's a regular file (not a directory)
         if [[ -f "$file" ]]; then
             ((file_count++))
+            # now you can test the flag
+            if [ "$TEST_MODE" = true ]; then
+            echo "Running in test mode!"
             test_run_vm "$cpu" "$file"
+            else
+            run_vm "$cpu" "$file"
+            fi
+
         fi
     done
     
@@ -232,7 +243,10 @@ if [[ -z "$INPUT_FOLDER" || -z "$CPU" || -z "$EXPERIMENT" || -z "$OUTPUT_FOLDER"
     -i INPUT_FOLDER 
     -c CPU [arm,sparc,386,m68k,mips,mipsel,powerpc]
     -e EXPERIMENT [dynamic_opcodes,static_opcodes,syscalls]
-    -o OUTPUT_FOLDER"
+    -o OUTPUT_FOLDER
+    
+    Optional:
+    -t --test-mode - echo output to run vm, rather than executing."
     usage
 fi
 
