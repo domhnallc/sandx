@@ -5,14 +5,14 @@ usage() {
     echo "Usage: $0 -i INPUT_FOLDER -c CPU -e EXPERIMENTS -o OUTPUT_FOLDER"
     echo "Required arguments:"
     echo "  -i, --input-folder    Input folder path (mandatory)"
-    echo "  -c, --cpu            Target CPU architecture: arm, sparc, x86, m68k, mips, mipsel, powerpc (mandatory)"
+    echo "  -c, --cpu            Target CPU architecture: arm, sparc, 386, m68k, mips, mipsel, powerpc (mandatory)"
     echo "  -e, --experiments    Experiment type: dynamic_opcodes, static_opcodes, syscalls (single choice)"
     echo "  -o, --output-folder  Output folder path to store results (mandatory)"
     echo ""
     echo "  -h, --help           Display this help message"
     echo ""
     echo "Examples:"
-    echo "  $0 -i /data/input -c x86 -e dynamic_opcodes -o /data/output"
+    echo "  $0 -i /data/input -c 386 -e dynamic_opcodes -o /data/output"
     echo "  $0 -i /data/input -c arm -e static_opcodes -o /data/output"
     exit 1
 }
@@ -28,7 +28,7 @@ validate_existing_path() {
 # Validate CPU choice
 validate_cpu() {
     local cpu="$1"
-    local valid_cpus=("arm" "sparc" "x86" "m68k" "mips" "mipsel" "powerpc")
+    local valid_cpus=("arm" "sparc" "386" "m68k" "mips" "mipsel" "powerpc")
     
     # Convert to lowercase
     cpu=$(echo "$cpu" | tr '[:upper:]' '[:lower:]')
@@ -155,7 +155,7 @@ test_run_vm(){
 
 	#begin session
 	echo "vboxmanage snapshot $VM_NAME restore $SNAPSHOT"
-	echo "vboxmanage startvm $VM_NAME --type gui"
+	echo "vboxmanage startvm $VM_NAME --type headless"
 	
 	echo "sleep $SLEEP"
 	
@@ -180,8 +180,8 @@ run_vm(){
     local input_file="$2"
 
 	local VM_NAME='charIoT'
-	local USER='admin2'
-	local PW='admin23'
+	local USER='user'
+	local PW='password'
 	local TO_EXEC=$1
 	local SLEEP=20
 	local SNAPSHOT='all_modes'
@@ -228,7 +228,11 @@ print_ascii(){
 # Validate required parameters
 if [[ -z "$INPUT_FOLDER" || -z "$CPU" || -z "$EXPERIMENT" || -z "$OUTPUT_FOLDER" ]]; then
     echo "Error: Missing required parameters"
-    echo "Required: -i INPUT_FOLDER -c CPU -e EXPERIMENT -o OUTPUT_FOLDER"
+    echo "Required:
+    -i INPUT_FOLDER 
+    -c CPU [arm,sparc,386,m68k,mips,mipsel,powerpc]
+    -e EXPERIMENT [dynamic_opcodes,static_opcodes,syscalls]
+    -o OUTPUT_FOLDER"
     usage
 fi
 

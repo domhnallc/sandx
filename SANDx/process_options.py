@@ -7,7 +7,7 @@ and output folders. It includes validation for paths and machine lists, ensuring
 that the provided configurations are correct before proceeding with the analysis.
 
 # Basic usage
-python app.py -i /data/input -m server1,server2 -c x86 -e dynamic_opcodes -o /data/output
+python app.py -i /data/input -m server1,server2 -c 386 -e dynamic_opcodes -o /data/output
 
 # Multiple experiments
 python app.py --input-folder /path --machines vm1,vm2,vm3 --cpu arm --experiments dynamic_opcodes,syscalls --output-folder /results
@@ -62,7 +62,7 @@ def create_parser():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  runner.py -i /path/to/input -m machine1,machine2 -c x86 -e dynamic_opcodes -o /path/to/output -N yes
+  runner.py -i /path/to/input -m machine1,machine2 -c 386 -e dynamic_opcodes -o /path/to/output -N yes
   runner.py --input-folder /data --machines vm1,vm2,vm3 --cpu arm --experiments dynamic_opcodes,syscalls --output-folder /results --num-folders 5
         """
     )
@@ -94,7 +94,7 @@ Examples:
     # CPU target (mandatory choice)
     parser.add_argument(
         '-c', '--cpu',
-        choices=['arm', 'sparc', 'x86', 'm68k', 'mips', 'mipsel', 'powerpc'],
+        choices=['arm', 'sparc', '386', 'm68k', 'mips', 'mipsel', 'powerpc'],
         type=str.lower, # Normalize to lowercase
         required=True,
         help='Target CPU architecture (mandatory)'
