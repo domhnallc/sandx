@@ -17,7 +17,7 @@ input_file="$2"
 experiment="static_opcodes"
 
 # filepaths
-shared_folder_path="/home/admin2/shared"
+shared_folder_path="/home/domhnall/shared"
 subfolder=""
 command_to_run=""
 experiment="static_opcodes"
@@ -64,6 +64,7 @@ build_experiment() {
 build_experiment
 
 base_static_opcode_command="timeout 10 objdump -D -j .text $input_file > $shared_folder_path/$subfolder/$(basename "$input_file").stat_opcode"
+
 
 eval $base_static_opcode_command
 
