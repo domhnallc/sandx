@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Resides in the shared folder
+# Runs inside the VM
+
 # $1 is the cpu architecture
 # $2 is the input file
 
