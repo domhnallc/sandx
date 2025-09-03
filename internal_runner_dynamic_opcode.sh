@@ -23,6 +23,7 @@ plugin_path="/home/admin2/qemu5/qemu/build/contrib/plugins/libexeclog.so"
 shared_folder_path="/home/admin2/shared"
 subfolder=""
 command_to_run=""
+experiment="dynamic_opcodes"
 
 # qemu commands for different CPU architectures
 m68k_command="$qemu_path/qemu-m68k"

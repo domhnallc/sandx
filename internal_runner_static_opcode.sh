@@ -14,16 +14,10 @@ input_file="$2"
 experiment="static_opcodes"
 
 # filepaths
-qemu_path="/home/admin2/qemu5/qemu/build"
-#if [[ ! -d "$qemu_path" ]]; then
-#    echo "QEMU path does not exist: $qemu_path"
-#    exit 1
-#fi
-plugin_path="/home/admin2/qemu5/qemu/build/contrib/plugins/libexeclog.so"
 shared_folder_path="/home/admin2/shared"
 subfolder=""
 command_to_run=""
-
+experiment="static_opcodes"
 
 build_experiment() {
 

@@ -13,6 +13,7 @@ input_file="$2"
 plugin_path="/home/admin2/qemu5/qemu/build/contrib/plugins/libexeclog.so"
 shared_folder_path="/home/admin2/shared/"
 subfolder=""
+experiment="dynamic_syscalls"
 
 
 build_experiment() {
