@@ -85,7 +85,7 @@ process_args() {
                     echo "Error: --cpu requires a value"
                     usage
                     exit 1
-                    return 1
+
                 fi
                 CPU=$(validate_cpu "$2")
                 shift 2
@@ -159,12 +159,12 @@ run() {
 
 test_run_vm(){
 
-	local VM_NAME='charIoT'
+	local VM_NAME='deb12_arm'
 	local USER='test'
 	local PW='test'
-	local TO_EXEC=$1
+	local TO_EXEC=$2
 	local SLEEP=20
-	local SNAPSHOT='all_modes'
+	local SNAPSHOT='base3'
 
     if [[ $EXPERIMENT == "dynamic_opcodes" ]]; then
         command_to_run="internal_runner_dynamic_opcode.sh"
@@ -198,16 +198,15 @@ test_run_vm(){
 
 run_vm(){
     local cpu="$1"
-    local input_file="$2"
+    #local input_file="$2"
 
-	local VM_NAME='charIoT'
-	local USER='user'
-	local PW='password'
-	local TO_EXEC=$1
+	local VM_NAME='deb12_arm'
+	local USER='test'
+	local PW='test'
+	local TO_EXEC=$2
 	local SLEEP=20
-	local SNAPSHOT='all_modes'
+	local SNAPSHOT='base3'
 
-    local command_to_run
 	
 	#begin session
 	vboxmanage snapshot $VM_NAME restore $SNAPSHOT
@@ -217,8 +216,8 @@ run_vm(){
 	
 	#run file
 	echo "Processing  "$TO_EXEC
-	#vboxmanage guestcontrol $VM_NAME --username $USER --password $PW start --exe=/home/admin2/runner_ppc.sh -- "$TO_EXEC"
-	vboxmanage guestcontrol $VM_NAME --username admin2 --password admin23 run --timeout 60000 $command_to_run $cpu $TO_EXEC
+	#vboxmanage guestcontrol $VM_NAME --username $USER --password $PW start --exe=/home/admin2/runner_ppC.sh -- "$TO_EXEC"
+	vboxmanage guestcontrol $VM_NAME --username $USER --password $PW run --timeout 60000 $command_to_run $cpu $TO_EXEC
 
 	sleep $SLEEP
 	
@@ -240,23 +239,33 @@ print_ascii(){
 
 }
 
+print_config(){
+    # Display parsed parameters
+    echo "================================================"
+    echo "Experiment Configuration"
+    echo "================================================"
+    echo "Input folder:      $INPUT_FOLDER"
+    echo "CPU architecture:  $CPU"
+    echo "Experiment:        $EXPERIMENT"
+    echo "Output folder:     $OUTPUT_FOLDER"
+    echo
+    echo "================================================"
+    echo
+}
+
 
 echo "start"
 ##############################
 #         START              #
 ##############################
+
+
+process_args "$@"
+
 echo "param check"
 # Validate required parameters
 if [[ -z "$INPUT_FOLDER" || -z "$CPU" || -z "$EXPERIMENT" || -z "$OUTPUT_FOLDER" ]]; then
-    echo "Error: Missing required parameters"
-    echo "Required:
-    -i INPUT_FOLDER 
-    -c CPU [arm,sparc,386,m68k,mips,mipsel,powerpc]
-    -e EXPERIMENT [dynamic_opcodes,static_opcodes,syscalls]
-    -o OUTPUT_FOLDER
-    
-    Optional:
-    -t --test-mode - echo output to run vm, rather than executing."
+
     usage
 fi
 
@@ -269,26 +278,10 @@ mkdir -p "$OUTPUT_FOLDER"
 
 print_ascii
 
-# Display parsed parameters
-echo "================================================"
-echo "Experiment Configuration"
-echo "================================================"
-echo "Input folder:      $INPUT_FOLDER"
-echo "CPU architecture:  $CPU"
-echo "Experiment:        $EXPERIMENT"
-echo "Output folder:     $OUTPUT_FOLDER"
-echo
-echo "================================================"
-echo
+print_config
 
-
-    # Processing
-echo "Starting."
-echo "Running experiment"
-
-
-run $INPUT_FOLDER
-
+# Run main processing
+run "$INPUT_FOLDER"
 echo "Processing complete!"
 
 
