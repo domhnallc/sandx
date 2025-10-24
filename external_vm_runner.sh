@@ -28,7 +28,7 @@ validate_existing_path() {
 # Validate CPU choice
 validate_cpu() {
     local cpu="$1"
-    local valid_cpus=("arm" "sparc" "x86" "m68k" "mips" "mipsel" "powerpc")
+    local valid_cpus=("arm" "sparc" "x86_64" "m68k" "mips" "mipsel" "powerpc" "386")
     
     # Convert to lowercase
     cpu=$(echo "$cpu" | tr '[:upper:]' '[:lower:]')
