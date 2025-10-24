@@ -19,12 +19,6 @@ def run_analysis(exp: Experiment):
     for machine, split_folder in mapped.items():
         exp.run_on_machine(machine, split_folder)
 
-
-
-
-
-
-
 def main():
     args = po.get_options()
     po.display_config(args)
